@@ -17,12 +17,11 @@ int client_handshake(int *to_server) {
     int pp = open("luigi", O_RDONLY);
     char buffer[MESSAGE_BUFFER_SIZE];
     read(pp, buffer, sizeof(buffer));
-    printf("[CLIENT] Message received: %s\n", buffer);
-    int final = open("luigi", O_WRONLY);
+    printf("[CLIENT] Server has connected. \n");
+    write(pkw, "CONN", 4);
     int i = fork();
     if(!i) execlp("rm","rm","luigi",NULL);
-    write(final,"CONNECTED",9);
-    return final;
+    return pp;
 }
 
 int server_handshake(int *from_client) {
@@ -31,6 +30,7 @@ int server_handshake(int *from_client) {
    printf("[SERVER] Created WKP\n");
    int wkp = open("mario", O_RDONLY);
    *from_client = wkp;
+
    printf("[SERVER] Waiting for response..\n");
    read(wkp, buffer, sizeof(buffer));
    printf("[SERVER] Received privacy: %s\n", buffer);
@@ -38,5 +38,8 @@ int server_handshake(int *from_client) {
    if(!j) execlp("rm","rm","mario",NULL);
    int pp2 = open("luigi", O_WRONLY);
    write(pp2,"connected", 9);
+
+   read(wkp, buffer, sizeof(buffer));
+   printf("[SERVER] Client has connected.\n");
    return pp2;
 }

@@ -13,8 +13,6 @@ int main() {
   char buffer[MESSAGE_BUFFER_SIZE];
   
   to_client = server_handshake( &from_client );
-    
-  printf("to_client: %d\n from_client: %d\n", to_client, from_client);
 
  while(read( from_client, buffer, sizeof(buffer))){
   printf("[SERVER] Recieved message: %s\n", buffer);
